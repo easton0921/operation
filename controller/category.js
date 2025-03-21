@@ -115,10 +115,24 @@ const byIdGetCategory = async (req, res) => {
       });
     }
 
+    
+    const categoryData = await Category.aggregate([
+      { $match: { _id: category._id } }, 
+      {
+        $lookup: {
+          from: "subcategories", 
+          localField: "_id", 
+          foreignField: "category", 
+          as: "subcategories", 
+        },
+      },
+    ]);
+
     res.status(200).json({
       status: true,
-      category,
+      data: categoryData[0] || category, 
     });
+
   } catch (error) {
     console.error("Error in byIdGetCategory function:", error);
     res.status(500).json({
@@ -221,8 +235,7 @@ const getSubcategoriesWithCategory = async (req, res) => {
         $unwind: {
           path: "$subcategoryDetails",
           preserveNullAndEmptyArrays: true, 
-        },
-
+        }      
       },
       {
         $project: {
