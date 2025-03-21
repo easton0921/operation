@@ -31,7 +31,7 @@ app.use('/api/user',userRouter)//user router
 app.use('/api/admin',adminRouter)//admin router 
 app.use('/api/merchant',merchantRouter)//merchant router 
 app.use('/api/address',addressRouter)//address router 
-app.use('/api',categoryRouter)//category router 
+app.use('/api',categoryRouter)//category and subCategory router 
 
 
 

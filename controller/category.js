@@ -81,6 +81,54 @@ const deleteCategory = async (req, res) => {
   }
 };
    
+//get all Category
+const getCategory = async (req, res) => {
+  try {
+    const allCategory = await Category.find({});
+
+    res.status(200).json({
+      status: true,
+      allCategory,
+      count: allCategory.length
+    });
+
+  } catch (error) {
+    console.error('error in getCategory function ', error);
+    res.status(400).json({
+      status: false,
+      message: "Internal server error"  
+    });
+  }
+};
+
+//only by id get category
+const byIdGetCategory = async (req, res) => {
+  try {
+    const { id } = req.params; 
+
+    const category = await Category.findById(id);
+    
+    if (!category) {
+      return res.status(404).json({
+        status: false,
+        message: "Category not found",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      category,
+    });
+  } catch (error) {
+    console.error("Error in byIdGetCategory function:", error);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
 //===================================================================================================================
 
 
@@ -156,11 +204,108 @@ const deleteSubCategory = async (req, res) => {
   }
 };
 
+//get subcategory
+
+const getSubcategoriesWithCategory = async (req, res) => {
+  try {
+    const subcategories = await Category.aggregate([
+      {
+        $lookup: {
+          from: "subcategories", 
+          localField: "_id", 
+          foreignField: "category", 
+          as: "subcategoryDetails", 
+        },
+      },
+      {
+        $unwind: {
+          path: "$subcategoryDetails",
+          preserveNullAndEmptyArrays: true, 
+        },
+
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          subcategories: {
+            $let: {
+              vars: {
+                subcategoryObj: "$subcategoryDetails",
+              },
+              in: {
+                _id: "$$subcategoryObj._id",
+                name: "$$subcategoryObj.name",
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          subcategories: { $push: "$subcategories" }, 
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: true,
+      categories: subcategories,
+      count: subcategories.length,
+    });
+
+  } catch (error) {
+    console.error("Error in getSubcategoriesWithCategory function:", error);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+
+
+//get by id subcategory
+const byIdGetSubcategory = async (req, res) => {
+  try {
+    const { id } = req.params; 
+
+    const Subcategory = await SubCategory.findById(id).populate("category", "name image");;
+    
+    if (!Subcategory) {
+      return res.status(404).json({
+        status: false,
+        message: "SubCategory not found",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      Subcategory,
+    });
+  } catch (error) {
+    console.error("Error in byIdGetCategory function:", error);
+    res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+
 module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
+  getCategory,
+  byIdGetCategory,
   createSubCategory,
   updateSubCategory,
   deleteSubCategory,
+  getSubcategoriesWithCategory,
+  byIdGetSubcategory
 };
