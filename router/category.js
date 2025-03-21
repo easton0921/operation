@@ -5,7 +5,7 @@ const router = express.Router();
 const categoryController = require("../controller/category");
 const multer = require("multer");
 
-// Multer Config
+// Multer 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
