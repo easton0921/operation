@@ -1,8 +1,10 @@
 const Product = require("../models/product");
-
+const User = require('../controller/user')
 //  Create a new product
 const createProduct = async (req, res) => {
     try {
+      const userId = req.user._id
+
       const { name, description, price, images, stock, category, subcategory } = req.body;
   
       if (!name || !price || !category || !subcategory) {
@@ -17,6 +19,7 @@ const createProduct = async (req, res) => {
         stock,
         category,
         subcategory,
+        createdBy:userId,
       });
   
       await newProduct.save();
@@ -62,7 +65,7 @@ const createProduct = async (req, res) => {
 //Get all products
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("category subcategory");
+    const products = await Product.find().populate("category subcategory createdBy");
     res.status(200).json({ status: true, products });
   } catch (error) {
     console.log('error ha bhai getAll product functuin ma ',error )
@@ -74,7 +77,7 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findById(id).populate("category subcategory");
+    const product = await Product.findById(id).populate("category subcategory createdBy");
 
     if (!product) {
       return res.status(404).json({ status: false, message: "Product not found" });
@@ -90,7 +93,7 @@ const getProductById = async (req, res) => {
 const getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const products = await Product.find({ category: categoryId }).populate("subcategory");
+    const products = await Product.find({ category: categoryId }).populate("subcategory createdBy");
 
     res.status(200).json({ status: true, products });
   } catch (error) {

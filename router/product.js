@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const {jwtMiddleware} = require('../middleware/jwt')
 const productController = require("../controller/product");
 
 // Routes for product operations
-router.post("/", productController.createProduct);
-router.put("/update/:id", productController.updateProduct);
-router.delete("/delete/:id", productController.deleteProduct);
+router.post("/", jwtMiddleware,productController.createProduct);
+router.put("/update/:id",jwtMiddleware, productController.updateProduct);
+router.delete("/delete/:id",jwtMiddleware, productController.deleteProduct);
 
 router.get("/", productController.getAllProducts);
 router.get("/single/:id", productController.getProductById);
