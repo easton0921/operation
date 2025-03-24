@@ -50,22 +50,27 @@ const createProduct = async (req, res) => {
   const deleteProduct = async (req, res) => {
     try {
       const { id } = req.params;
-      const deletedProduct = await Product.findByIdAndDelete(id);
+      const deletedProduct = await Product.findByIdAndUpdate(
+        id,
+        { isDeleted: true }, 
+        { new: true } 
+      );
   
       if (!deletedProduct) {
         return res.status(404).json({ status: false, message: "Product not found" });
       }
   
-      res.status(200).json({ status: true, message: "Product deleted" });
+      res.status(200).json({ status: true, message: "Product  deleted" });
     } catch (error) {
       res.status(500).json({ status: false, message: "Internal Server Error" });
     }
   };
+  
 
 //Get all products
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate("category subcategory createdBy");
+    const products = await Product.find({ isDeleted: false}).populate("category subcategory createdBy");
     res.status(200).json({ status: true, products });
   } catch (error) {
     console.log('error ha bhai getAll product functuin ma ',error )
@@ -77,10 +82,12 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findById(id).populate("category subcategory createdBy");
+    
+    const product = await Product.findOne({ _id: id, isDeleted: false })
+      .populate("category subcategory createdBy");
 
     if (!product) {
-      return res.status(404).json({ status: false, message: "Product not found" });
+      return res.status(404).json({ status: false, message: "Product not found or has been deleted" });
     }
 
     res.status(200).json({ status: true, product });
@@ -93,7 +100,7 @@ const getProductById = async (req, res) => {
 const getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const products = await Product.find({ category: categoryId }).populate("subcategory createdBy");
+    const products = await Product.find({ category: categoryId, isDeleted: false, }).populate("subcategory createdBy");
 
     res.status(200).json({ status: true, products });
   } catch (error) {
@@ -105,7 +112,7 @@ const getProductsByCategory = async (req, res) => {
 const getProductsBySubcategory = async (req, res) => {
   try {
     const { subcategoryId } = req.params;
-    const products = await Product.find({ subcategory: subcategoryId });
+    const products = await Product.find({ subcategory: subcategoryId , isDeleted: false,});
 
     res.status(200).json({ status: true, products });
   } catch (error) {

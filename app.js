@@ -3,13 +3,7 @@ const os = require('os')
 const morgan = require('morgan')
 const path = require('path')
 const {connectMongoDb} = require('./mongodb/db')
-const userRouter = require("./router/user")
-const adminRouter = require("./router/admin")
-const merchantRouter = require("./router/merchant")
-const addressRouter = require("./router/address")
-const categoryRouter = require("./router/category")
-const productRouter = require("./router/product")
-
+const index = require('./router/index')
 
 require('dotenv').config()
 
@@ -27,13 +21,9 @@ connectMongoDb("mongodb://localhost:27017/operation").then(()=>console.log('✅ 
 //middleware
 app.use(express.raw({extended:false}))
 
-//Router call
-app.use('/api/user',userRouter)//user router 
-app.use('/api/admin',adminRouter)//admin router 
-app.use('/api/merchant',merchantRouter)//merchant router 
-app.use('/api/address',addressRouter)//address router 
-app.use('/api',categoryRouter)//category and subCategory router 
-app.use('/api/product',productRouter)//product router 
+//Router
+app.use(index)
+
 
 
 
