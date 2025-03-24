@@ -8,6 +8,7 @@ const adminRouter = require("./router/admin")
 const merchantRouter = require("./router/merchant")
 const addressRouter = require("./router/address")
 const categoryRouter = require("./router/category")
+const productRouter = require("./router/product")
 
 
 require('dotenv').config()
@@ -32,6 +33,7 @@ app.use('/api/admin',adminRouter)//admin router
 app.use('/api/merchant',merchantRouter)//merchant router 
 app.use('/api/address',addressRouter)//address router 
 app.use('/api',categoryRouter)//category and subCategory router 
+app.use('/api/product',productRouter)//product router 
 
 
 
