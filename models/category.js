@@ -9,8 +9,12 @@ const categorySchema = new mongoose.Schema(
             trim: true,
         },
         image: {
-            type: String,
+            type: String,   
             default: null,
+        },
+        isDeleted: {
+            type: Boolean,
+            default:false,
         },
     },
     { timestamps: true }

@@ -73,7 +73,11 @@ const deleteCategory = async (req, res) => {
 
     await SubCategory.deleteMany({ category: id });
 
-    await Category.findByIdAndDelete(id);
+    await Category.findByIdAndUpdate(
+      id,
+      { isDeleted: true }, 
+      { new: true } 
+    );
     res.status(200).json({ success: true, message: "Category and its subcategories deleted" });
   } catch (error) {
     console.error("Error deleting category:", error);
@@ -84,7 +88,7 @@ const deleteCategory = async (req, res) => {
 //get all Category
 const getCategory = async (req, res) => {
   try {
-    const allCategory = await Category.find({});
+    const allCategory = await Category.find({isDeleted:false});
 
     res.status(200).json({
       status: true,
