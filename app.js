@@ -24,9 +24,6 @@ app.use(express.raw({extended:false}))
 //Router
 app.use(index)
 
-
-
-
 //handle for bad request
 app.use((req,res,next)=>{
     console.log("👺check router")
