@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     emailVerify: {
-        type: String,
+        type: Boolean,
         default: false,
     },
     phoneVerify: {
-        type: String,
+        type: Boolean,
         default: false,
     },
     gender: {
@@ -43,7 +43,10 @@ const userSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false,
-    }
+    },isBlocked: {
+        type: Boolean,
+        default: false
+    },
 }, { timestamps: true })
 
 

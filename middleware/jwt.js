@@ -1,6 +1,7 @@
 const auth = require('../utility/jwt');
 const User = require('../models/user');
 const constant = require('../utility/constants')
+const Model = require('../models/index')
 
 
 //user middleware
@@ -120,6 +121,32 @@ async function addressMiddleware(req, res, next) {
   }
 
 
+  //socket.io middleware
+  async function verifySocketToken(token1, socket, next) {
+    try {
+        const token = token1;
+        console.log('token:',token1)
+        if (!token) {
+            return next(new Error('Authentication error: Token is required'));
+        }
+        const decoded = auth.verifyToken(token)
+
+        if (!decoded) { return res.status(401).json({ message: "invalid token" }) }
+
+        let user = await Model.user.findOne({ _id: decoded.id, isDeleted: false })
+        console.log('raman',user)
+        if (!user) { return res.status(404).json({ message: "user not found deleted" }) }
+        socket.user = user;
+
+        return user._id
+
+    }
+    catch (err) {
+        (new Error('Authentication error: Invalid token'));
+    }
+
+}
+
   
 
 
@@ -129,4 +156,5 @@ module.exports = {
     adminJwtMiddleware,
     merchantJwtMiddleware,
     addressMiddleware,//all token  pass without role 
+    verifySocketToken,
 }
