@@ -15,7 +15,7 @@ module. exports = io => {
             socket.join(socket.user._id)
             socket.on('connectToChat', async (data) => {
             
-                let roomId = data.roomId
+                let roomId = data.roomId    
                 let blockData = await Model.block.findOne({
                     $or: [
                         { userId: socket.user._id, blockId: roomId },

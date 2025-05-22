@@ -56,7 +56,7 @@ async function userSignup(req, res) {
       const dbStore = await User.create(obj)//user store data
 
       const otpStoredb = await UserOtp.create(obj)//db store data 
-
+console.log("hiii")
       res.status(200).json({ status: "OTP sent successfully.", })
 
     } else return res.status(404).send({ status: "only user role 1 exist" })

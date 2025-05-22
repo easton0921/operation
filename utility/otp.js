@@ -11,8 +11,9 @@ async function otpForEmail(email){
         console.log("Deleted email otps :",deltedResult)
         let otpIs = common.otpCreate()
         console.log("Generated otp for email:",otpIs)
-
+         console.log("hii-----------pinku ")
         const nodemailers = await nodeMailere.sendMail(email,otpIs)
+        console.log("byy")
         return otpIs;
     } catch (error) {
         console.log("Error is email otp generate function",error)

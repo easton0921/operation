@@ -13,15 +13,15 @@ const transporter = nodeMailer.createTransport(
     }
 )
 
-function sendMail( to,otp){
+function sendMail( to,otp){ 
     transporter.sendMail({
         to : to,
         Subject : `Signin OTP`,
-        html : `your otp code is ${otp}`,
+        html : `otp is ${otp}`,
         })
         console.log('email send ')
 }
 
 module.exports = {
     sendMail,
-}
+} 

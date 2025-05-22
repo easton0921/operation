@@ -290,7 +290,7 @@ const byIdGetSubcategory = async (req, res) => {
   try {
     const { id } = req.params; 
 
-    const Subcategory = await SubCategory.findById(id).populate("category", "name image");;
+    const Subcategory = await SubCategory.findById(id).populate("category", "name image");
     
     if (!Subcategory) {
       return res.status(404).json({

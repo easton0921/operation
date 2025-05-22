@@ -11,7 +11,7 @@ const createProduct = async (req, res) => {
         return res.status(400).json({ status: false, message: "Missing required fields" });
       }
   
-      const newProduct = new Product({
+      const new̥Product = new Product({
         name,
         description,
         price,
